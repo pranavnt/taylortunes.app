@@ -1,3 +1,4 @@
+import Select from "react-select";
 import songsList from "~/utils/songsList";
 import selectSong from "~/utils/selectSong";
 import { useState, useEffect } from "react";
@@ -10,6 +11,7 @@ export default function Index() {
   const [numGuesses, setNumGuesses] = useState(0);
   const [guesses, setGuesses] = useState(["‎", "‎", "‎", "‎", "‎", "‎"]);
   const [isOver, setIsOver] = useState(false);
+  const [currGuess, setCurrGuess] = useState("");
 
   useEffect(() => {
     globalThis.duration = 1;
@@ -34,57 +36,48 @@ export default function Index() {
           <div
             key={index}
             style={{
-              backgroundColor: "#EEE",
+              backgroundColor: "#f7f8f2",
               border: "1px solid #CCC",
-              margin: "10px",
+              marginTop: "10px",
+              marginBottom: "10px",
               height: "35px",
               borderRadius: "5px",
+              paddingLeft: "10px",
+              textAlign: "left",
+              fontSize: "20px",
             }}
           >
-            <p>{guess}</p>
+            {guess}
           </div>
         );
       })}
+      <br />
       {!isOver ? (
         <>
-          <input
-            type="text"
-            id="guess-input"
-            onKeyUp={() => {
-              let filter = document
-                .getElementById("guess-input")
-                ?.value.toUpperCase();
-              let li = document
-                .getElementById("songs-options-list")
-                ?.getElementsByTagName("li");
-
-              for (let i = 0; i < li.length; i++) {
-                let txtValue = li[i].textContent || li[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                  li[i].style.display = "";
-                } else {
-                  li[i].style.display = "none";
-                }
-              }
+          <Select
+            id="react-select-song"
+            className="basic-single"
+            classNamePrefix="select"
+            defaultValue="22"
+            isClearable={true}
+            isSearchable={true}
+            name="song-selection"
+            options={sortedSongsList.map((el, index) => {
+              return { id: index, label: el };
+            })}
+            onChange={(e) => {
+              setCurrGuess(e.label);
             }}
-            onClick={() => {
-              setIsClicked(true);
-            }}
-            placeholder="Search for songs"
-            title=""
           />
           <button
             onClick={(e) => {
-              guesses[numGuesses] =
-                document.getElementById("guess-input")?.value;
-              setGuesses(guesses);
+              if (currGuess == "") return;
+
+              guesses[numGuesses] = currGuess;
 
               if (guesses[numGuesses] === song) {
-                console.log("correct");
                 setIsOver(true);
-                alert("You won!");
               } else {
-                console.log("incorrect");
                 globalThis.duration = globalThis.duration * 2;
               }
 
@@ -95,45 +88,61 @@ export default function Index() {
                 setIsOver(true);
               }
             }}
+            style={{
+              backgroundColor: "#EEE",
+              border: "1px solid #CCC",
+              marginTop: "5px",
+              height: "38px",
+              width: "110px",
+              borderRadius: "5px",
+              backgroundColor: "#5c8bc4",
+              color: "white",
+              textAlign: "center",
+              float: "left",
+              fontSize: "20px",
+              fontWeight: "semibold",
+              cursor: "pointer",
+            }}
           >
-            Guess
+            🔮 Guess
           </button>
         </>
       ) : (
         <button
           onClick={(e) => {
-            let str = `Taylor Swift Heardle`;
+            let squareString = "";
+            for (let guess of guesses) {
+              if (guess != "‎") {
+                if (guess !== song) {
+                  squareString += "🟥";
+                } else {
+                  squareString += "🟩";
+                }
+              }
+            }
+            let str = `Taylor Swift Heardle 💛
+
+🔇 ${squareString} (${squareString.length == 6 ? squareString.length : "X"}/6)
+
+https://taylortunes.app/heardle`;
+
+            navigator.clipboard.writeText(str);
+          }}
+          style={{
+            background: "none",
+            border: "none",
+            borderRadius: "5px",
+            height: "35px",
+            backgroundColor: "#e0af6b",
+            color: "white",
+            fontSize: "1.2em",
+            fontWeight: "bold",
+            width: "100%",
+            cursor: "pointer",
           }}
         >
           Share
         </button>
-      )}
-      {isClicked && (
-        <ul
-          id="songs-options-list"
-          style={{
-            overflow: "scroll",
-            maxHeight: "200px",
-            listStyle: "none",
-            textAlign: "left",
-            padding: "10px",
-            overflowX: "hidden",
-          }}
-        >
-          {sortedSongsList.map((song, index) => {
-            return (
-              <li
-                key={index}
-                onClick={() => {
-                  console.log(song);
-                  document.getElementById("guess-input").value = song;
-                }}
-              >
-                {song}
-              </li>
-            );
-          })}
-        </ul>
       )}
     </div>
   );
