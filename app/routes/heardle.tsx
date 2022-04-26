@@ -119,7 +119,7 @@ export default function Heardle() {
               border: "1px solid #CCC",
               marginTop: "5px",
               height: "38px",
-              width: "110px",
+              width: "150px",
               borderRadius: "5px",
               backgroundColor: "#5c8bc4",
               color: "white",
