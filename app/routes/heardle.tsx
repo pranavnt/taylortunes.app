@@ -144,11 +144,15 @@ export default function Heardle() {
                 } else {
                   squareString += "🟩";
                 }
+              } else {
+                squareString += "⬛";
               }
             }
             let str = `Taylor Swift Heardle 💛
 
-🔇 ${squareString} (${squareString.length == 6 ? squareString.length : "X"}/6)
+🔇 ${squareString} (${
+              squareString == "⬛⬛⬛⬛⬛⬛" ? "X" : squareString.length - 6
+            }/6)
 
 https://taylortunes.app/heardle`;
 
