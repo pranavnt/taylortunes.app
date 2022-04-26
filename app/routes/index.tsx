@@ -1,3 +1,4 @@
+import styles from "../tailwind.css";
 import ReactHTMLParser from "react-html-parser";
 import { useState } from "react";
 
@@ -8,6 +9,7 @@ export default function Index() {
 
   return (
     <div>
+      <link rel="stylesheet" href={styles} />
       <title>TaylorTunes – A search engine for Taylor Swift Songs</title>
       <meta
         name="description"
