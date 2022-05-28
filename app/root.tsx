@@ -26,6 +26,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
+      <script defer data-domain="taylortunes.app" src="https://plausible.io/js/plausible.js"></script>
       <body>
         <Outlet />
         <ScrollRestoration />
